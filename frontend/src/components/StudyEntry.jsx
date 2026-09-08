@@ -35,15 +35,15 @@ export default function StudyEntry() {
   };
 
   return (
-    <section className="surface rounded-[26px] p-5 sm:p-6" aria-labelledby="entry-title">
-      <p className="m-0 text-xs font-bold uppercase tracking-[.15em]">New entry</p>
-      <h2 id="entry-title" className="display-face mt-2">
+    <section className="surface rounded-[26px] p-5 sm:p-6 dark:bg-[#161e2d] dark:border-[#263244]" aria-labelledby="entry-title">
+      <p className="m-0 text-xs font-bold uppercase tracking-[.15em] text-[#5a6478] dark:text-[#94a3b8]">New entry</p>
+      <h2 id="entry-title" className="display-face mt-2 text-[#0f1729] dark:text-[#f8fafc]">
         Add a study item
       </h2>
       <form className="mt-5" onSubmit={handleSubmit}>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1.5 block text-sm font-bold" htmlFor="subject">
+            <label className="mb-1.5 block text-sm font-bold text-[#0f1729] dark:text-[#f8fafc]" htmlFor="subject">
               Subject
             </label>
             <input
@@ -56,7 +56,7 @@ export default function StudyEntry() {
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-sm font-bold" htmlFor="priority">
+            <label className="mb-1.5 block text-sm font-bold text-[#0f1729] dark:text-[#f8fafc]" htmlFor="priority">
               Priority
             </label>
             <select
@@ -72,7 +72,7 @@ export default function StudyEntry() {
           </div>
         </div>
         <div className="mt-4">
-          <label className="mb-1.5 block text-sm font-bold" htmlFor="item-title">
+          <label className="mb-1.5 block text-sm font-bold text-[#0f1729] dark:text-[#f8fafc]" htmlFor="item-title">
             Task title
           </label>
           <input
@@ -85,7 +85,7 @@ export default function StudyEntry() {
           />
         </div>
         <div className="mt-4">
-          <label className="mb-1.5 block text-sm font-bold" htmlFor="content">
+          <label className="mb-1.5 block text-sm font-bold text-[#0f1729] dark:text-[#f8fafc]" htmlFor="content">
             Details
           </label>
           <textarea
@@ -96,7 +96,7 @@ export default function StudyEntry() {
           />
         </div>
         <div className="mt-4">
-          <label className="mb-1.5 block text-sm font-bold" htmlFor="due-date">
+          <label className="mb-1.5 block text-sm font-bold text-[#0f1729] dark:text-[#f8fafc]" htmlFor="due-date">
             Due date
           </label>
           <input
@@ -108,7 +108,8 @@ export default function StudyEntry() {
           />
         </div>
         <button
-          className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 font-bold transition hover:-translate-y-0.5 disabled:opacity-60"
+          className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl text-white px-4 py-3 font-bold transition hover:-translate-y-0.5 disabled:opacity-60 cursor-pointer shadow-md hover:opacity-95 active:scale-95"
+          style={{ background: 'var(--brand-gradient)', boxShadow: '0 4px 14px var(--brand-glow)' }}
           type="submit"
           disabled={saving}
         >

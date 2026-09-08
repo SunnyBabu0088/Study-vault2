@@ -71,8 +71,13 @@ const createConversation = async (memberIds) => {
 };
 
 const getOrCreateConversation = async (userId, participantUsernames) => {
-    const participants = await userService.getUsersByUsernames(participantUsernames);
-    if (participants.length !== participantUsernames.length) {
+    const cleanedNames = [...new Set((participantUsernames || []).map((name) => String(name).trim()).filter(Boolean))];
+    if (cleanedNames.length === 0) {
+        throw new Error('At least one participant username must be provided');
+    }
+
+    const participants = await userService.getUsersByUsernames(cleanedNames);
+    if (!participants || participants.length === 0) {
         throw new Error('One or more participants were not found');
     }
 
@@ -84,6 +89,7 @@ const getOrCreateConversation = async (userId, participantUsernames) => {
 
     return createConversation(participantIds);
 };
+
 
 module.exports = {
     getConversationsForUser,

@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+.env.*
+android
+capacitor.config.json
+.git
+.gitignore
+.DS_Store
+Thumbs.db

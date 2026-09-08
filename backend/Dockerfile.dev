@@ -1,0 +1,20 @@
+FROM node:20-alpine
+
+# Install build dependencies for native modules like bcrypt
+RUN apk add --no-cache python3 make g++
+
+WORKDIR /app
+
+# Install dependencies first for better layer caching
+COPY package*.json ./
+RUN npm install
+
+# Copy application source code
+COPY . .
+
+# Ensure uploads directory exists
+RUN mkdir -p uploads
+
+EXPOSE 5000
+
+CMD ["npm", "run", "dev"]

@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { getApiBaseUrl } from './client';
 
 let socketRef = null;
 
@@ -6,7 +7,10 @@ export const getSocket = () => socketRef;
 
 export const connectSocket = () => {
   if (socketRef) return socketRef;
-  socketRef = io({ withCredentials: true });
+  const baseUrl = getApiBaseUrl();
+  socketRef = baseUrl
+    ? io(baseUrl, { withCredentials: true })
+    : io({ withCredentials: true });
   return socketRef;
 };
 

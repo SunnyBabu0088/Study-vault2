@@ -1,0 +1,13 @@
+{
+  "name": "studyvault",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "cap:sync": "cd frontend && npx cap sync android",
+    "cap:open": "cd frontend && npx cap open android",
+    "build:apk": "cd frontend && npm run build && npx cap sync android && cd android && .\\gradlew.bat assembleDebug"
+  }
+}

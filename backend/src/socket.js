@@ -134,6 +134,52 @@ const initSocket = (server) => {
             }
         });
 
+        // WebRTC Call Signaling Handlers
+        socket.on('call_initiate', ({ conversationId, receiverId, callType, offer }) => {
+            if (!conversationId) return;
+            socket.to(`conversation:${conversationId}`).emit('call_incoming', {
+                conversationId,
+                callerId: socket.user.id,
+                callerUsername: socket.user.username,
+                callType,
+                offer,
+            });
+        });
+
+        socket.on('call_answer', ({ conversationId, answer }) => {
+            if (!conversationId) return;
+            socket.to(`conversation:${conversationId}`).emit('call_answered', {
+                conversationId,
+                answer,
+                responderId: socket.user.id,
+            });
+        });
+
+        socket.on('ice_candidate', ({ conversationId, candidate }) => {
+            if (!conversationId) return;
+            socket.to(`conversation:${conversationId}`).emit('ice_candidate', {
+                conversationId,
+                candidate,
+                senderId: socket.user.id,
+            });
+        });
+
+        socket.on('call_end', ({ conversationId }) => {
+            if (!conversationId) return;
+            io.to(`conversation:${conversationId}`).emit('call_ended', {
+                conversationId,
+                endedBy: socket.user.id,
+            });
+        });
+
+        socket.on('call_reject', ({ conversationId }) => {
+            if (!conversationId) return;
+            socket.to(`conversation:${conversationId}`).emit('call_rejected', {
+                conversationId,
+                rejectedBy: socket.user.id,
+            });
+        });
+
         socket.on('disconnect', () => {
             // Broadcast user offline status
             socket.broadcast.emit('user_status', { userId: socket.user.id, status: 'offline' });

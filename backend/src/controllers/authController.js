@@ -47,7 +47,7 @@ const register = async (req, res, next) => {
 
         const token = signToken({ userId: user.id, email: user.email });
         createAuthCookie(res, token);
-        return sendCreated(res, { user: normalizeUserResponse(user) });
+        return sendCreated(res, { user: normalizeUserResponse(user), token });
     } catch (error) {
         next(error);
     }
@@ -79,7 +79,7 @@ const login = async (req, res, next) => {
 
         const token = signToken({ userId: user.id, email: user.email });
         createAuthCookie(res, token);
-        return sendSuccess(res, { user: normalizeUserResponse(user) });
+        return sendSuccess(res, { user: normalizeUserResponse(user), token });
     } catch (error) {
         next(error);
     }
@@ -117,4 +117,69 @@ const me = async (req, res, next) => {
     }
 };
 
-module.exports = { register, login, logout, me };
+const forgotPassword = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        if (!email) {
+            const error = new Error('Email is required');
+            error.statusCode = 400;
+            throw error;
+        }
+
+        const resetData = await userService.createPasswordResetToken(email.trim().toLowerCase());
+        return sendSuccess(res, {
+            message: 'If an account exists with that email, password reset instructions have been processed.',
+            token: resetData ? resetData.token : null, // Provided for direct verification
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const resetPassword = async (req, res, next) => {
+    try {
+        const { token, newPassword } = req.body;
+        if (!token || !newPassword || newPassword.length < 8) {
+            const error = new Error('Valid reset token and new password (min 8 characters) are required.');
+            error.statusCode = 400;
+            throw error;
+        }
+
+        const success = await userService.resetPasswordWithToken(token, newPassword);
+        if (!success) {
+            const error = new Error('Invalid or expired password reset token.');
+            error.statusCode = 400;
+            throw error;
+        }
+
+        return sendSuccess(res, { message: 'Password has been reset successfully. Please log in with your new password.' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteAccount = async (req, res, next) => {
+    try {
+        if (!req.user) {
+            const error = new Error('Not authenticated');
+            error.statusCode = 401;
+            throw error;
+        }
+
+        await userService.deleteUser(req.user.id);
+
+        const secure = env.NODE_ENV === 'production';
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure,
+            sameSite: 'lax',
+            path: '/',
+        });
+
+        return sendSuccess(res, { message: 'Account and associated data deleted permanently.' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { register, login, logout, me, forgotPassword, resetPassword, deleteAccount };

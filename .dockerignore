@@ -1,0 +1,34 @@
+# Version control
+.git
+.gitignore
+
+# IDE & Editor
+.vscode
+.idea
+
+# Dependencies
+node_modules
+*/node_modules
+
+# Build artifacts
+dist
+*/dist
+
+# Local environment files with secrets
+.env
+.env.*
+!.env.example
+!*/.env.example
+
+# Runtime uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS specific
+.DS_Store
+Thumbs.db

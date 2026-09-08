@@ -1,6 +1,7 @@
 const app = require('./app');
 const { pool } = require('./config/database');
 const { initializeSchema } = require('./config/schema');
+const { seedDemoReels } = require('./config/seedDemoReels');
 const { initSocket } = require('./socket');
 const env = require('./config/env');
 
@@ -12,12 +13,13 @@ const startServer = async () => {
     try {
         await initializeSchema();
         console.log('Database schema initialized successfully.');
+        await seedDemoReels();
     } catch (error) {
         console.warn('Database schema initialization unavailable, continuing in degraded mode:', error.message);
     }
 
-    server = app.listen(PORT, () => {
-        console.log(`StudyVault API listening on port ${PORT}`);
+    server = app.listen(PORT, '0.0.0.0', () => {
+        console.log(`StudyVault API listening on port ${PORT} (0.0.0.0)`);
     });
 
     initSocket(server);

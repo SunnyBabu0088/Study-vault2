@@ -48,8 +48,8 @@ const validateLogin = (data) => {
         errors.email = 'A valid email address is required.';
     }
 
-    if (!password || password.length < 8) {
-        errors.password = 'Password must be at least 8 characters long.';
+    if (!password) {
+        errors.password = 'Password is required.';
     }
 
     return { valid: Object.keys(errors).length === 0, errors, sanitized: { email, password } };
@@ -71,6 +71,7 @@ const validateProfilePayload = (data) => {
     const email = String(data.email || '').trim().toLowerCase();
     const phone = String(data.phone || '').trim();
     const roll_number = String(data.roll_number || '').trim();
+    const bio = String(data.bio || '').trim();
     const avatar_url = String(data.avatar_url || '').trim();
 
     if (!username || username.length < 3 || username.length > 30) {
@@ -89,14 +90,14 @@ const validateProfilePayload = (data) => {
         errors.roll_number = 'Roll number is too short.';
     }
 
-    if (avatar_url && !avatar_url.startsWith('http')) {
-        errors.avatar_url = 'Avatar URL must be a valid URL.';
+    if (avatar_url && !avatar_url.startsWith('http') && !avatar_url.startsWith('/') && !avatar_url.startsWith('data:')) {
+        errors.avatar_url = 'Avatar URL must be a valid URL or path.';
     }
 
     return {
         valid: Object.keys(errors).length === 0,
         errors,
-        sanitized: { username, email, phone, roll_number, avatar_url },
+        sanitized: { username, email, phone, roll_number, bio, avatar_url },
     };
 };
 
@@ -239,6 +240,7 @@ const normalizeUserResponse = (user) => ({
     email: user.email,
     phone: user.phone || null,
     roll_number: user.roll_number || null,
+    bio: user.bio || null,
     avatar_url: user.avatar_url || null,
     streak_count: user.streak_count || 0,
     last_chat_date: user.last_chat_date || null,

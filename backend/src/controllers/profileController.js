@@ -21,7 +21,8 @@ const updateProfile = async (req, res, next) => {
     try {
         const { valid, errors, sanitized } = validateProfilePayload(req.body);
         if (!valid) {
-            const error = new Error('Validation failed');
+            const errorMsg = Object.values(errors).join(' ') || 'Validation failed';
+            const error = new Error(errorMsg);
             error.statusCode = 400;
             error.details = errors;
             throw error;
@@ -39,6 +40,7 @@ const updateProfile = async (req, res, next) => {
             email: sanitized.email,
             phone: sanitized.phone,
             rollNumber: sanitized.roll_number,
+            bio: sanitized.bio,
             avatarUrl: sanitized.avatar_url,
         });
 

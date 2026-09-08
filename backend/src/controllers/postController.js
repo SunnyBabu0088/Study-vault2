@@ -104,4 +104,40 @@ const deletePost = async (req, res, next) => {
     }
 };
 
-module.exports = { listPosts, getPost, createPost, updatePost, deletePost };
+const addComment = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { content } = req.body;
+        if (!content || !content.trim()) {
+            const error = new Error('Comment content is required');
+            error.statusCode = 400;
+            throw error;
+        }
+        const comment = await postService.addPostComment(id, req.user.id, content.trim());
+        return sendCreated(res, { comment });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getComments = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const comments = await postService.getPostComments(id);
+        return sendSuccess(res, { comments });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const recordShare = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const result = await postService.recordPostShare(id, req.user.id);
+        return sendSuccess(res, result);
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { listPosts, getPost, createPost, updatePost, deletePost, addComment, getComments, recordShare };

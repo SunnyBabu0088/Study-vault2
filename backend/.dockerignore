@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log
+uploads/*
+!uploads/.gitkeep
+.git
+.gitignore
+.env
+.env.*
+.DS_Store
+Thumbs.db
